@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
+<?import javafx.scene.control.TextField?>
+<VBox alignment="TOP_CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.example.otp2_inclass2.BmiController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+    </padding>
+
+    <ComboBox fx:id="languageComboBox" onAction="#onLanguageSelected" value="English">
+        <items>
+            <FXCollections fx:factory="observableArrayList">
+                <String fx:id="englishOption" fx:value="" />
+                <String fx:id="urduOption" fx:value=""/>
+                <String fx:id="frenchOption" fx:value=""/>
+                <String fx:id="vietnameseOption" fx:value=""/>
+            </FXCollections>
+        </items>
+    </ComboBox>
+
+    <VBox>
+        <Label fx:id="heightLabel">Height</Label>
+        <TextField fx:id="heightField" promptText="Enter height"/>
+    </VBox>
+
+    <VBox>
+        <Label fx:id="weightLabel">Height</Label>
+        <TextField fx:id="weightField" promptText="Enter weight"/>
+    </VBox>
+
+    <Button fx:id="convertButton" text="Convert" onAction="#onConvertClick"/>
+
+    <VBox>
+        <Label fx:id="bmiLabel">BMI</Label>
+        <TextField fx:id="bmiField" promptText="BMI" editable="false"/>
+        <Label fx:id="errorLabel" visible="false" wrapText="true" managed="false">error</Label>
+        <Label fx:id="langErrorLabel" visible="false" wrapText="true" managed="false">error</Label>
+    </VBox>
+
+</VBox>
