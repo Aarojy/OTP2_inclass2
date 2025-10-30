@@ -19,10 +19,10 @@ RUN mkdir -p /javafx-sdk \
     && rm -rf /javafx-sdk/javafx-sdk-21.0.2 javafx.zip
 
 # Copy your fat JAR
-  RUN mv target/OTP2_inclass2-1.0-SNAPSHOT.jar app.jar || (echo "JAR not found; listing target:" && ls -la target && exit 1)
+  COPY target/OTP2_inclass2-1.0-SNAPSHOT.jar OTP2_inclass2-1.0-SNAPSHOT.jar
  #COPY target/*.jar app.jar
 # Set X11 display (Windows host with Xming/X11)
 ENV DISPLAY=host.docker.internal:0.0
 
 # Run JavaFX app
-CMD ["java", "--module-path", "/javafx-sdk/lib", "--add-modules", "javafx.controls,javafx.fxml", "-jar", "target/OTP2_inclass2-1.0-SNAPSHOT.jar"]
+CMD ["java", "--module-path", "/javafx-sdk/lib", "--add-modules", "javafx.controls,javafx.fxml", "-jar", "OTP2_inclass2-1.0-SNAPSHOT.jar"]
