@@ -4,6 +4,7 @@ LABEL authors="aaroj"
 WORKDIR /app
 COPY pom.xml /app
 COPY . /app
+RUN mvn package
 
 # Install GUI libraries
 RUN apt-get update && apt-get install -y \
