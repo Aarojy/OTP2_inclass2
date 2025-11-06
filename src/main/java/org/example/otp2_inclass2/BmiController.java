@@ -8,6 +8,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.Map;
 
@@ -21,6 +24,7 @@ public class BmiController {
     @FXML private Label bmiLabel;
     @FXML private Label errorLabel;
     @FXML private Label langErrorLabel;
+    @FXML private Label timeLabel;
 
     @FXML private TextField heightField;
     @FXML private TextField weightField;
@@ -41,6 +45,8 @@ public class BmiController {
         Map<String, String> localizedStrings = LocalizationService.getLocalizedStrings(setLocale);
 
         try {
+            timeLabel.setText(displayLocalTime(setLocale));
+
             languageComboBox.getItems().set(0, localizedStrings.getOrDefault("choiceEnglish", "English"));
             languageComboBox.getItems().set(1, localizedStrings.getOrDefault("choiceUrdu", "Urdu"));
             languageComboBox.getItems().set(2, localizedStrings.getOrDefault("choiceFrench", "French"));
@@ -104,5 +110,30 @@ public class BmiController {
 
     public static double calculateBmi(Double height, Double weight) {
         return weight / (height * height);
+    }
+
+    public String displayLocalTime(Locale locale) {
+        String zoneId;
+
+        switch (locale.getCountry()) {
+            case "US":
+                zoneId = "America/New_York";
+                break;
+            case "FR":
+                zoneId = "Europe/Paris";
+                break;
+            case "PK":
+                zoneId = "Asia/Karachi";
+                break;
+            case "VN":
+                zoneId = "Asia/Ho_Chi_Minh";
+                break;
+            default:
+                zoneId = "UTC";
+        }
+        ZonedDateTime zoneDate = ZonedDateTime.now(ZoneId.of(zoneId));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyy HH:mm:ss");
+
+        return zoneDate.format(formatter);
     }
 }
