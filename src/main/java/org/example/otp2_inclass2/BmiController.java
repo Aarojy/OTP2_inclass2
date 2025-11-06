@@ -9,7 +9,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.util.Locale;
-import java.util.ResourceBundle;
+import java.util.Map;
 
 public class BmiController {
 
@@ -26,6 +26,8 @@ public class BmiController {
     @FXML private TextField weightField;
     @FXML private TextField bmiField;
 
+    private Locale setLocale;
+
     @FXML
     private void initialize() {
         setLanguage("en", "US");
@@ -35,30 +37,30 @@ public class BmiController {
         langErrorLabel.setVisible(false);
         langErrorLabel.setManaged(false);
 
+        setLocale = new Locale(language, Country);
+        Map<String, String> localizedStrings = LocalizationService.getLocalizedStrings(setLocale);
+
         try {
-            Locale locale = new Locale(language, Country);
-            ResourceBundle rb = ResourceBundle.getBundle("MessagesBundle", locale);
+            languageComboBox.getItems().set(0, localizedStrings.getOrDefault("choiceEnglish", "English"));
+            languageComboBox.getItems().set(1, localizedStrings.getOrDefault("choiceUrdu", "Urdu"));
+            languageComboBox.getItems().set(2, localizedStrings.getOrDefault("choiceFrench", "French"));
+            languageComboBox.getItems().set(3, localizedStrings.getOrDefault("choiceVietnamese", "Vietnamese"));
 
-            languageComboBox.getItems().set(0, rb.getString("choiceEnglish.text"));
-            languageComboBox.getItems().set(1, rb.getString("choiceUrdu.text"));
-            languageComboBox.getItems().set(2, rb.getString("choiceFrench.text"));
-            languageComboBox.getItems().set(3, rb.getString("choiceVietnamese.text"));
+            convertButton.setText(localizedStrings.getOrDefault("buttonConvert", "Convert"));
 
-            convertButton.setText(rb.getString("buttonConvert.text"));
+            heightLabel.setText(localizedStrings.getOrDefault("labelHeight", "Height"));
+            weightLabel.setText(localizedStrings.getOrDefault("labelWeight", "Weight"));
+            bmiLabel.setText(localizedStrings.getOrDefault("labelBMI", "Body Mass Index (BMI):"));
+            errorLabel.setText(localizedStrings.getOrDefault("labelError", "Please enter valid numeric values for height and weight."));
+            langErrorLabel.setText(localizedStrings.getOrDefault("labelLangError", "Language selection error."));
 
-            heightLabel.setText(rb.getString("labelHeight.text"));
-            weightLabel.setText(rb.getString("labelWeight.text"));
-            bmiLabel.setText(rb.getString("labelBMI.text"));
-            errorLabel.setText(rb.getString("labelError.text"));
-            langErrorLabel.setText(rb.getString("labelLangError.text"));
-
-            heightField.setPromptText(rb.getString("promptHeight.text"));
-            weightField.setPromptText(rb.getString("promptWeight.text"));
-            bmiField.setPromptText(rb.getString("promptBMI.text"));
+            heightField.setPromptText(localizedStrings.getOrDefault("promptHeight", "Height in meters"));
+            weightField.setPromptText(localizedStrings.getOrDefault("promptWeight", "Weight in kilograms"));
+            bmiField.setPromptText(localizedStrings.getOrDefault("promptBMI", "Your BMI will be displayed here"));
 
             Platform.runLater(() -> {
                 Stage stage = (Stage) convertButton.getScene().getWindow();
-                stage.setTitle(rb.getString("appTitle.text"));
+                stage.setTitle(localizedStrings.getOrDefault("appTitle", "Aaro's BMI Calculator"));
             });
 
         } catch (Exception e) {
@@ -90,6 +92,9 @@ public class BmiController {
 
             double bmi = calculateBmi(height, weight);
             bmiField.setText(String.format("%.2f", bmi));
+
+            String language = setLocale.getLanguage();
+            BMIResultService.saveResult(weight, height, bmi, language);
 
         } catch (NumberFormatException e) {
             errorLabel.setVisible(true);
